@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ComponentLibrary">
+      <HintPath>..\..\ComponentLibrary\ComponentLibrary\bin\Debug\netcoreapp2.1\ComponentLibrary.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
