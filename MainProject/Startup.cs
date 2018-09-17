@@ -29,13 +29,11 @@ namespace MainProject
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 
-			Assembly assembly = typeof(ListViewComponent).GetTypeInfo().Assembly;
-			EmbeddedFileProvider embeddedFileProvider = new EmbeddedFileProvider(assembly, "ComponentLibrary");
 			services.Configure<RazorViewEngineOptions>(options => {
-				options.FileProviders.Add(embeddedFileProvider);
+				options.FileProviders.Add(new EmbeddedFileProvider(typeof(ListViewComponent).GetTypeInfo().Assembly));
 			});
 			services.AddMvc();
-			services.AddScoped<ListViewComponent,ListViewComponent>();
+			services.AddTransient<ListViewComponent>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,58 +1,72 @@
 ﻿@{
 	ViewData["Title"] = "Home Page";
 }
-@using ComponentLibrary.ViewComponents
-@using ComponentLibrary.Models
-@model string
-inject ComponentLibrary.Models.ListOfListsViewModel test
 
-@{
-	List<List<int>> testList = new List<List<int>>();
-	testList.Add(new List<int>() { 2, 6, 8 });
-	testList.Add(new List<int>() { 2, 3, 9, 7 });
-	testList.Add(new List<int>() { 41, 18 });
-	string teststring = "2" + Environment.NewLine + "6" + Environment.NewLine + "8;" + "2" + Environment.NewLine + "3" + Environment.NewLine + "9" + Environment.NewLine + "7;" + "41" + Environment.NewLine + "18";
-}
 <div>
-	Input desired number of lists and press "Enter": <input id="numberOfLists" type="number" onkeypress="inputNumberOfLists(event)" />
+	Number of lists: <input id="numberOfLists" type="number" oninput="inputNumberOfLists()" />
 	<br />
 	<div id="lists"></div>
-	<input type="button" value="Get result" onclick="buttonClick()" />
+	<br />
+	<input type="button" value="Get result" onClick="buttonClick()" />
 </div>
-<div id="Result"></div>
-
-<div>
-	@await Component.InvokeAsync(nameof(ListViewComponent), new { lists = testList })
-	await test.GetResultString()
-</div>
+<div id="result"></div>
 
 <script type="text/javascript">
-	function listOnKeyPress(e) {
-		var k = e.which;
-		if (!(k == 13 || (k >= 48 && k < 58)))
-			e.preventDefault();
-	}
-</script>
-
-<script type="text/javascript">
-	function buttonClick() {
-		document.getElementById("Result").innerHTML = @Url.Action("Calculate", "Home", new { inputs = teststring });
-	}
-</script>
-
-<script type="text/javascript">
-	function inputNumberOfLists(e) {
-		e = e || window.event;
-		var key = e.keyCode;
-		if (key == 13) //Enter
-		{
-			var number = document.getElementById("numberOfLists").value;
-			var container = document.getElementById("lists");
-			container.innerHTML = "";
-			for (var i = 0; i < number; i++) {
-				container.innerHTML += "<textarea name=\"List" + i + "\" rows=\"10\" cols=\"15\" onkeypress=\"listOnKeyPress(event)\"></textarea>"
+	function listOnKeyPress(e, list) {
+		var key = e.which;
+		if (key >= 48 && key < 58) {
+			var start = list.value.substring(0, list.selectionStart).lastIndexOf("\n");
+			start = start == -1 ? 0 : start + 1;
+			var end = list.value.substring(list.selectionStart).indexOf("\n");
+			end = end == -1 ? list.value.length - 1 : end + list.selectionStart - 1;
+			if (end - start == 10) {
+				alert("you definitely don't need this huge number")
+				e.preventDefault();
 			}
-			return true; //return true to submit, false to do nothing
 		}
+		else if (key == 13) {
+			list.style.height = (list.scrollHeight + 15) + "px";//15 - depends on font height
+		}
+		else {
+			e.preventDefault();
+		}
+	}
+</script>
+
+<script type="text/javascript">
+	function listOnErase(e, list) {
+		var key = e.keyCode;
+		if (key == 8 || key == 46) {
+			list.style.height = "0px";
+			list.style.height = list.scrollHeight + "px";
+		}
+	}
+</script>
+
+<script type="text/javascript">
+	function getAllLists() {
+		var totalString = "";
+		var number = document.getElementById("numberOfLists").value;
+		for (var i = 0; i < number; i++) {
+			totalString += ";" + document.getElementById("list" + i).value;
+		}
+		totalString = totalString.substring(1);
+		return totalString;
+	}
+	function buttonClick() {
+		document.getElementById("result").innerHTML = '@Component.InvokeAsync(nameof(ComponentLibrary.ViewComponents.ListViewComponent), new { lists = "'+getAllLists()+'" })';
+	}
+
+</script>
+
+<script type="text/javascript">
+	function inputNumberOfLists() {
+		var number = document.getElementById("numberOfLists").value;
+		var container = document.getElementById("lists");
+		container.innerHTML = "";
+		for (var i = 0; i < number; i++) {
+			container.innerHTML += "<textarea id=\"list" + i + "\" rows=\"1\" cols=\"10\" style=\"resize: none; overflow:hidden;\" onkeypress=\"listOnKeyPress(event,this)\" onkeyup=\"listOnErase(event,this)\"></textarea>"
+		}
+		return true; //return true to submit, false to do nothing
 	}
 </script>
