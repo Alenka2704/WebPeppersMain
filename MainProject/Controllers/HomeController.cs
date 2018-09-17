@@ -20,12 +20,8 @@ namespace MainProject.Controllers
 
 		public IActionResult Calculate(string inputs)
 		{
-			return View("Index",(new IndexViewModel(inputs.Split(';').ToList())).ParseInput());
+			return View("Index",_listComponent.Invoke((new IndexViewModel(inputs.Split(';').ToList())).ParseInput()));
 		}
-/*		public IActionResult Calculate(List<List<int>> inputs)
-		{
-			return View(inputs);
-		}*/
 		public IActionResult Index()
 		{
 			return View();

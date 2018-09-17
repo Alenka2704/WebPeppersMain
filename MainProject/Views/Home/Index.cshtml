@@ -3,7 +3,7 @@
 }
 @using ComponentLibrary.ViewComponents
 @using ComponentLibrary.Models
-@model List<List<int>>
+@model string
 inject ComponentLibrary.Models.ListOfListsViewModel test
 
 @{
@@ -13,38 +13,44 @@ inject ComponentLibrary.Models.ListOfListsViewModel test
 	testList.Add(new List<int>() { 41, 18 });
 	string teststring = "2" + Environment.NewLine + "6" + Environment.NewLine + "8;" + "2" + Environment.NewLine + "3" + Environment.NewLine + "9" + Environment.NewLine + "7;" + "41" + Environment.NewLine + "18";
 }
-<div id="main">
-	<textarea id="TextArea1" rows="1" cols="50" readonly="readonly">Input desired number of lists and press "Enter"</textarea>
-	<input id="Text1" type="number" onkeypress="inputNumberOfLists(event)" />
+<div>
+	Input desired number of lists and press "Enter": <input id="numberOfLists" type="number" onkeypress="inputNumberOfLists(event)" />
+	<br />
+	<div id="lists"></div>
+	<input type="button" value="Get result" onclick="buttonClick()" />
 </div>
-<input id="Button1" type="button" value="Get result" onclick="location.href='@Url.Action("Calculate", "Home")?inputs=' + @teststring"  />
+<div id="Result"></div>
 
 <div>
-		await Component.InvokeAsync(nameof(ListViewComponent), new { lists = testList })
+	@await Component.InvokeAsync(nameof(ListViewComponent), new { lists = testList })
 	await test.GetResultString()
 </div>
 
-<script>
+<script type="text/javascript">
 	function listOnKeyPress(e) {
-						var k = e.which;
-						if (!(k == 13 || (k >= 48 && k < 58)))
-							e.preventDefault();
-					}
+		var k = e.which;
+		if (!(k == 13 || (k >= 48 && k < 58)))
+			e.preventDefault();
+	}
 </script>
+
+<script type="text/javascript">
+	function buttonClick() {
+		document.getElementById("Result").innerHTML = @Url.Action("Calculate", "Home", new { inputs = teststring });
+	}
+</script>
+
 <script type="text/javascript">
 	function inputNumberOfLists(e) {
-						e = e || window.event;
-					var key = e.keyCode;
+		e = e || window.event;
+		var key = e.keyCode;
 		if (key == 13) //Enter
 		{
-			var number = document.getElementById("Text1").value;
-					var container = document.getElementById("main");
+			var number = document.getElementById("numberOfLists").value;
+			var container = document.getElementById("lists");
+			container.innerHTML = "";
 			for (var i = 0; i < number; i++) {
-				container.appendChild(document.createElement("br"));
-				var input = document.createElement("textarea");
-					input.name = "List" + (i + 1);
-				input.onkeypress = "listOnKeyPress(event)";
-				container.appendChild(input);
+				container.innerHTML += "<textarea name=\"List" + i + "\" rows=\"10\" cols=\"15\" onkeypress=\"listOnKeyPress(event)\"></textarea>"
 			}
 			return true; //return true to submit, false to do nothing
 		}

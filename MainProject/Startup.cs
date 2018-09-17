@@ -35,7 +35,7 @@ namespace MainProject
 				options.FileProviders.Add(embeddedFileProvider);
 			});
 			services.AddMvc();
-			services.AddTransient<ListViewComponent>();
+			services.AddScoped<ListViewComponent,ListViewComponent>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

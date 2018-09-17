@@ -13,6 +13,7 @@
   <ItemGroup>
     <Reference Include="ComponentLibrary">
       <HintPath>..\..\ComponentLibrary\ComponentLibrary\bin\Debug\netcoreapp2.1\ComponentLibrary.dll</HintPath>
+      <Private>true</Private>
     </Reference>
   </ItemGroup>
 
