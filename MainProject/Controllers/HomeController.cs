@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using MainProject.Models;
 using ComponentLibrary.ViewComponents;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MainProject.Controllers
 {
@@ -20,8 +17,10 @@ namespace MainProject.Controllers
 
 		public IActionResult Calculate(string inputs)
 		{
-			return View("Index",_listComponent.InvokeAsync((new IndexViewModel(inputs.Split(';').ToList())).ParseInput()));
+			List<List<int>> lists = inputs.Split(';').ToList().Select(item => item.Trim().Replace(string.Format("{0}{0}", Environment.NewLine), Environment.NewLine).Split(Environment.NewLine).Select(item1 => int.Parse(item1)).ToList()).ToList();
+			return View("Index", _listComponent.Invoke(lists));
 		}
+
 		public IActionResult Index()
 		{
 			return View();

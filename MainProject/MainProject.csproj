@@ -10,14 +10,14 @@
 	  <PackageReference Include="Microsoft.AspNetCore.Diagnostics" Version="2.1.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="ComponentLibrary">
-      <HintPath>..\..\ComponentLibrary\ComponentLibrary\bin\Debug\netcoreapp2.1\ComponentLibrary.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 	<ItemGroup>
 		<EmbeddedResource Include="Views\**\*.cshtml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="ComponentLibrary">
+	    <HintPath>..\..\ComponentLibrary\ComponentLibrary\bin\Debug\netcoreapp2.1\ComponentLibrary.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 	
 	<ItemGroup>

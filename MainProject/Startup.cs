@@ -3,7 +3,6 @@ using ComponentLibrary.ViewComponents;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,7 +29,7 @@ namespace MainProject
 			});
 
 			services.Configure<RazorViewEngineOptions>(options => {
-				options.FileProviders.Add(new EmbeddedFileProvider(typeof(ListViewComponent).GetTypeInfo().Assembly));
+				options.FileProviders.Add(new EmbeddedFileProvider(typeof(ListViewComponent).GetTypeInfo().Assembly, "ComponentLibrary"));
 			});
 			services.AddMvc();
 			services.AddTransient<ListViewComponent>();

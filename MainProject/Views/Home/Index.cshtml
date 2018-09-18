@@ -14,7 +14,7 @@
 <script type="text/javascript">
 	function listOnKeyPress(e, list) {
 		var key = e.which;
-		if (key >= 48 && key < 58) {
+		if (key >= 48 && key < 58) {//if digit is pressed check that total length of this number will fit Int
 			var start = list.value.substring(0, list.selectionStart).lastIndexOf("\n");
 			start = start == -1 ? 0 : start + 1;
 			var end = list.value.substring(list.selectionStart).indexOf("\n");
@@ -24,7 +24,7 @@
 				e.preventDefault();
 			}
 		}
-		else if (key == 13) {
+		else if (key == 13) {//one digit per row. increase height of textareas to avoid scrollBars
 			list.style.height = (list.scrollHeight + 15) + "px";//15 - depends on font height
 		}
 		else {
@@ -36,7 +36,7 @@
 <script type="text/javascript">
 	function listOnErase(e, list) {
 		var key = e.keyCode;
-		if (key == 8 || key == 46) {
+		if (key == 8 || key == 46) {//decrease size of textareas if some numbers are removed
 			list.style.height = "0px";
 			list.style.height = list.scrollHeight + "px";
 		}
@@ -44,6 +44,7 @@
 </script>
 
 <script type="text/javascript">
+	//combine numbers from all lists to one string that will be passed to Controller
 	function getAllLists() {
 		var totalString = "";
 		var number = document.getElementById("numberOfLists").value;
@@ -54,9 +55,8 @@
 		return totalString;
 	}
 	function buttonClick() {
-		document.getElementById("result").innerHTML = '@Component.InvokeAsync(nameof(ComponentLibrary.ViewComponents.ListViewComponent), new { lists = "'+getAllLists()+'" })';
+		document.getElementById("result").innerHTML = '@Url.Action("Calculate", "Home", new { inputs = "'+getAllLists()+'" })';//couldn't figure out how to make this magic work
 	}
-
 </script>
 
 <script type="text/javascript">
@@ -64,6 +64,7 @@
 		var number = document.getElementById("numberOfLists").value;
 		var container = document.getElementById("lists");
 		container.innerHTML = "";
+		//create as many textareas as number that user has input
 		for (var i = 0; i < number; i++) {
 			container.innerHTML += "<textarea id=\"list" + i + "\" rows=\"1\" cols=\"10\" style=\"resize: none; overflow:hidden;\" onkeypress=\"listOnKeyPress(event,this)\" onkeyup=\"listOnErase(event,this)\"></textarea>"
 		}
